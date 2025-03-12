@@ -6,7 +6,7 @@ import { Context } from '../../context/context'
 const Main = () => {
     const {
         onSent,
-        recentPrompt,
+        recentPrompt, 
         showResult,
         loading,
         resultData,
@@ -36,7 +36,7 @@ const Main = () => {
                 {!showResult ? (
                     <>
                         <div className="greet">
-                            <p><span>Hello, JaneSarah</span></p>
+                            <p><span>Hello, I'am B-MAX</span></p>
                             <p>HOW CAN I HELP YOU TODAY ?</p>
                         </div>
                         <div className="cards">
@@ -65,7 +65,7 @@ const Main = () => {
                             <p>{recentPrompt}</p>
                         </div>
                         <div className="result-data">
-                            <img src={assets.gemini_icon} alt="" />
+                            <img src={assets.gemini_icon} alt="" /> 
                             {loading ? (
                                 <div className='loader'>
                                     <hr />

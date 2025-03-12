@@ -132,7 +132,7 @@
     margin: 40px 0px;
     display: flex;
     align-items: center;
-    gap: 20px;
+    gap: 20px; 
 }
 
 .result img {
@@ -157,7 +157,7 @@
     border-radius: 4px;
     border: none;
     background-color: #f6f7f8;
-    background: linear-gradient(to right, #9ed7ff, #ffffff, #9ed7ff);
+    background: linear-gradient(to right, #112544, #ffffff, #ff5546);
     background-size: 800px 50px; 
     height: 20px; 
     animation: loader 3s infinite linear; 
