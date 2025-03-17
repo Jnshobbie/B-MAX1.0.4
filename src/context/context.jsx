@@ -4,67 +4,69 @@ import runChat from "../config/Gemini";
 export const Context = createContext(); 
 
 const ContextProvider = ({ children }) => {  
-
-    const [input,setInput] = useState("");
-    const [recentPrompt,setRecentPrompt] = useState("");
-    const [prevPrompts,setPrevPrompts] = useState([]); 
-    const [showResult,setShowResult] = useState(false); 
-    const [loading,setLoading] = useState(false);
-    const [resultData,setResultData] = useState("");  
-
-    const delayPara = (index,nextWord) => {
-        if (!nextWord) return;
-        setTimeout(() => {
-            setResultData(prev => prev + nextWord);  
-        }, 75 * index)
-    }
+    const [input, setInput] = useState("");
+    const [recentPrompt, setRecentPrompt] = useState("");
+    const [prevPrompts, setPrevPrompts] = useState([]); 
+    const [showResult, setShowResult] = useState(false); 
+    const [loading, setLoading] = useState(false);
+    const [chatHistory, setChatHistory] = useState([]);
 
     const newChat = () => {
-        setLoading(false)
-        setShowResult(false)
-        setResultData("")
-        setInput("")
-        setRecentPrompt("")
-        setPrevPrompts([])
+        setLoading(false);
+        setShowResult(false);
+        setInput("");
+        setRecentPrompt("");
+        setPrevPrompts([]);
+        setChatHistory([]);
     }
-
 
     const onSent = async (prompt) => {
         if (!prompt?.trim()) return;
         
         try {
-            setLoading(true)
-            setShowResult(true)
-            setRecentPrompt(prompt)
-            setResultData("")
-
+            setLoading(true);
+            setShowResult(true);
+            setRecentPrompt(prompt);
+            
+            // Add user message immediately
+            setChatHistory(prev => [...prev, { text: prompt, isUser: true }]);
+            
+            // Update previous prompts
             setPrevPrompts(prev => {
-                const updatedPrompts = prev.includes(prompt) 
-                    ? prev 
-                    : [...prev, prompt];
-                return updatedPrompts.slice(-10);
-            })
+                if (!prev.includes(prompt)) {
+                    return [...prev, prompt];
+                }
+                return prev;
+            });
             
-            const response = await runChat(prompt)
+            const response = await runChat(prompt);
             
-            if (typeof response === 'string') {
-                const words = response.split(' ')
+            // Gradually display AI response
+            if (response) {
+                const words = response.split(' ');
                 words.forEach((word, index) => {
-                    delayPara(index, word + ' ')
-                })
-            } else if (response) {
-                setResultData(response)
-            } else {
-                throw new Error('Empty response from API')
+                    setTimeout(() => {
+                        setChatHistory(prev => {
+                            const lastMessage = prev[prev.length - 1];
+                            if (lastMessage && !lastMessage.isUser) {
+                                return [...prev.slice(0, -1), { text: lastMessage.text + ' ' + word, isUser: false }];
+                            }
+                            return [...prev, { text: word, isUser: false }];
+                        });
+                    }, 75 * index); // Adjust timing for gradual display
+                });
             }
+            
         } catch (error) {
-            console.error('Error:', error)
-            setResultData("Sorry, there was an error processing your request.")
+            console.error('Error:', error);
+            setChatHistory(prev => [...prev, { 
+                text: "Sorry, there was an error processing your request.", 
+                isUser: false 
+            }]);
         } finally {
-            setLoading(false) 
+            setLoading(false);
         }
     }
-  
 
     const contextValue = {
         prevPrompts,
@@ -75,17 +77,16 @@ const ContextProvider = ({ children }) => {
         showResult,
         setShowResult,
         loading, 
-        resultData,
         input,
         setInput,
         newChat,
+        chatHistory,
     }
 
     return (
         <Context.Provider value={contextValue}>
             {children}
         </Context.Provider>
-            
     )
 }
 

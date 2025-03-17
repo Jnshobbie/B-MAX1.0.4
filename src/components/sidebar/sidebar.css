@@ -1,11 +1,13 @@
 .sidebar {
-    min-width: 10vh;
-    display: inline-flex;
+    width: 150px;
+    min-width: 60px;
+    height: 100vh;
+    background: #f9f9f9;
+    padding: 20px;
+    display: flex;
     flex-direction: column;
-    justify-content: space-between;
-    background-color: #f0f4f9;
-    padding: 25px 15px;  
-    animation: fadeIn 2.5s; 
+    transition: all 0.3s ease;
+    animation: fadeIn 2.5s;
 }
 
 .sidebar img {
@@ -21,14 +23,14 @@
 .sidebar .new-chat {
     margin-top: 30px;
     display: inline-flex;
-    align-items: center;
+    align-items: center; 
     gap: 10px;
     padding: 10px 15px; 
     background-color: #e6eaf1; 
     border-radius: 50px;
     font-size: 14px;
     color: grey;   
-    cursor: pointer;
+    cursor: pointer; 
 }
 
 .sidebar .recent {
@@ -67,8 +69,58 @@
     cursor: pointer;
 } 
 
-@media (max-width:600px) {
+@media (max-width: 768px) {
     .sidebar {
-        display: none;  
-    } 
+        position: fixed;
+        left: -320px;
+        top: 0;
+        z-index: 1000;
+        background: white;
+        box-shadow: 2px 0 5px rgba(0,0,0,0.1);
+        animation: none;
+    }
+
+    .sidebar.open {
+        left: 0;
+        animation: fadeIn 2.5s;
+    }
+
+    /* Add overlay when sidebar is open */
+    .sidebar.open::after {
+        content: '';
+        position: fixed;
+        top: 0;
+        left: 320px;
+        right: 0;
+        bottom: 0;
+        background: rgba(0, 0, 0, 0.5);
+        z-index: -1;
+    }
+
+    /* Show only icon when sidebar is collapsed */
+    .sidebar:not(.open) {
+        width: 60px;
+        min-width: 60px;
+    }
+
+    .sidebar:not(.open) .new-chat p, 
+    .sidebar:not(.open) .recent,
+    .sidebar:not(.open) .bottom-item p {
+        display: none;
+    }
+}
+
+@media (max-width: 480px) { 
+    .sidebar {
+        width: 280px; 
+    }
+}
+
+@keyframes fadeIn {
+    0% {
+        opacity: 0;
+    }
+    100% {
+        opacity: 1;
+    }
 }

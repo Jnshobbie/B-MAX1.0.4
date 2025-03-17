@@ -1,38 +1,58 @@
-import React, { useContext } from 'react'
+import React, { useContext, useEffect } from 'react'
 import './Main.css'  
 import { assets } from '../../assets/assets' 
 import { Context } from '../../context/context'
 
-const Main = () => {
+const Main = ({ setIsSidebarOpen }) => {
     const {
         onSent,
-        recentPrompt, 
         showResult,
         loading,
-        resultData,
         setInput,
-        input
+        input,
+        chatHistory
     } = useContext(Context)
 
     const handleSend = () => {
         if (input.trim()) {
             onSent(input);
+            setInput(''); // Clear input immediately after sending
+        }
+    }
+
+    const handleKeyPress = (e) => {
+        if (e.key === 'Enter' && input.trim()) {
+            handleSend();
         }
     }
 
     // Add click handlers for the suggestion cards
     const handleCardClick = (prompt) => { 
-        setInput(prompt);
-        onSent(prompt);
+        onSent(prompt); 
+        // No need to setInput here since it's a card click
     }
+
+    // Add this effect to scroll to bottom on new messages
+    useEffect(() => {
+        const chatContainer = document.getElementById('chat-container');
+        if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+    }, [chatHistory, loading]);
 
     return (
         <div className='main'> 
-            <div className='nav'>
+            <div className='nav'> 
+                <img 
+                    src={assets.menu_icon}  
+                    alt="Menu"
+                    className="menu-icon"
+                    onClick={() => setIsSidebarOpen(prev => !prev)}
+                />
                 <p>B-Max</p> 
                 <img src={assets.user_icon} alt="" /> 
             </div>
-            <div className="main-container">
+            <div className="main-container"> 
                 {!showResult ? (
                     <>
                         <div className="greet">
@@ -59,23 +79,43 @@ const Main = () => {
                         </div>
                     </>
                 ) : (
-                    <div className='result'>
-                        <div className='result-title'>
-                            <img src={assets.user_icon} alt="" /> 
-                            <p>{recentPrompt}</p>
-                        </div>
-                        <div className="result-data">
-                            <img src={assets.gemini_icon} alt="" /> 
-                            {loading ? (
+                    <div className='result' id="chat-container">
+                        {chatHistory.map((message, index) => (
+                            <div key={index} className={`message ${message.isUser ? 'user-message' : 'ai-message'}`}>
+                                {message.isUser ? (
+                                    <div className="user-content">
+                                        <p>{message.text}</p>
+                                    </div>
+                                ) : (
+                                    <div className="result-data">
+                                        <img src={assets.gemini_icon} alt="" />
+                                        <div className="response-content">
+                                            {/* Replace asterisks with bold formatting */}
+                                            {message.text.split('\n').map((paragraph, pIndex) => (
+                                                <p key={pIndex}>
+                                                    {paragraph.split(/(\*\*.*?\*\*|__.*?__)/g).map((part, i) => {
+                                                        if (part.startsWith('**') || part.startsWith('__')) {
+                                                            return <strong key={i}>{part.replace(/\*\*|__/g, '')}</strong>;
+                                                        }
+                                                        return part;
+                                                    })}
+                                                </p>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
+                            </div>
+                        ))}
+                        {loading && (
+                            <div className="result-data">
+                                <img src={assets.gemini_icon} alt="" />
                                 <div className='loader'>
                                     <hr />
                                     <hr />
                                     <hr />
                                 </div>
-                            ) : (
-                                <div dangerouslySetInnerHTML={{__html: resultData}} />
-                            )}
-                        </div>
+                            </div>
+                        )}
                     </div>
                 )}
 
@@ -84,18 +124,21 @@ const Main = () => {
                         <input 
                             value={input}
                             onChange={(e) => setInput(e.target.value)}
+                            onKeyPress={handleKeyPress}
                             type="text" 
                             placeholder='Enter a prompt here'
-                            onKeyPress={(e) => {
-                                if (e.key === 'Enter' && input.trim()) {
-                                    handleSend();
-                                }
-                            }}
                         />
                         <div>
                             <img src={assets.gallery_icon} alt="" />
                             <img src={assets.mic_icon} alt="" />
-                            {input && <img onClick={handleSend} src={assets.send_icon} alt="" />}
+                            {input && (
+                                <img 
+                                    onClick={handleSend} 
+                                    src={assets.send_icon} 
+                                    alt="Send" 
+                                    style={{ cursor: 'pointer' }}
+                                />
+                            )}
                         </div>
                     </div>
                     <p className="bottom-info">

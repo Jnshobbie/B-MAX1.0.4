@@ -79,6 +79,8 @@
     max-width: 900px;
     padding: 0px 20px;
     margin: auto;
+    background: linear-gradient(to top, white 80%, transparent);
+    padding-top: 20px;
 }
 
 .search-box {
@@ -119,37 +121,114 @@
 }
 
 .result {
-    padding: 0px 5%;
+    padding: 20px 5%;
     max-height: 70vh;
-    overflow-y: scroll;
+    overflow-y: auto;
+    scroll-behavior: smooth;
 }
 
+/* Make sure new messages are visible */
 .result::-webkit-scrollbar {
-    display: none;
+    width: 6px;
+}
+
+.result::-webkit-scrollbar-thumb {
+    background-color: #ddd;
+    border-radius: 3px;
 }
 
 .result-title {
     margin: 40px 0px;
-    display: flex;
-    align-items: center;
-    gap: 20px; 
+    padding-bottom: 20px;
+    border-bottom: 1px solid #e5e5e5;
 }
 
-.result img {
-    width: 40px;
-    border-radius: 50%;
+.result-title p {
+    font-size: 16px;
+    color: #353740;
+    font-weight: 500;
 }
 
 .result-data {
     display: flex;
-    align-items: start;
-    gap: 20px; 
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 0;
+    line-height: 1.8;
+}
+
+.result-data img {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    margin-top: 5px;  /* Align with first line of text */
+}
+
+/* Style the AI response text */
+.result-data div {
+    flex: 1;
+    font-size: 16px;
+    color: #353740;
+    line-height: 1.8;
+    white-space: pre-wrap;  /* Preserve formatting */
+}
+
+/* Style code blocks in AI responses */
+.result-data pre {
+    background-color: #f7f7f8;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+    font-family: 'Courier New', Courier, monospace;
+}
+
+.result-data code {
+    font-family: 'Courier New', Courier, monospace;
+    background-color: #f7f7f8;
+    padding: 2px 4px;
+    border-radius: 4px;
+    font-size: 14px;
+}
+
+/* Style lists in AI responses */
+.result-data ul, 
+.result-data ol {
+    margin: 16px 0;
+    padding-left: 24px;
+}
+
+.result-data li {
+    margin: 8px 0;
+}
+
+/* Style paragraphs */
+.result-data p {
+    margin: 16px 0;
+    font-size: 16px;
+    color: #353740;
+    line-height: 1.8;
+}
+
+/* Style headings */
+.result-data h1,
+.result-data h2,
+.result-data h3,
+.result-data h4 {
+    margin: 24px 0 16px;
+    color: #202123;
+    font-weight: 600;
+}
+
+/* Add subtle dividers between messages */
+.result-data:not(:last-child) {
+    border-bottom: 1px solid #e5e5e5;
 }
 
 .loader {
-    width: 100%;
+    width: 100%; 
     display: flex;
-    flex-direction: column;
+    flex-direction: column; 
     gap: 10px;
 }
 
@@ -192,4 +271,227 @@
     .search-box div {
         gap: 5px;
     }
+}
+
+@media (max-width: 768px) {
+    .main {
+        width: 100%;
+        padding: 10px;
+    }
+
+    .greet {
+        margin: 30px 0;
+        font-size: 24px;
+    }
+
+    .cards {
+        grid-template-columns: 1fr;
+        gap: 10px;
+        padding: 10px;
+    }
+
+    .card {
+        height: auto; 
+        min-height: 120px;
+    }
+
+    .search-box {
+        padding: 8px 15px;
+    }
+
+    .search-box input {
+        width: 100%;
+        font-size: 14px;
+    }
+
+    .result {
+        padding: 0 15px;
+    }
+
+    .result-data {
+        gap: 12px;
+        padding: 15px 0;
+    }
+
+    .result-data div {
+        font-size: 15px;
+        line-height: 1.6;
+    }
+
+    .result-data pre {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    .nav {
+        padding: 20px 30px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .nav p {
+        font-size: 18px;
+    }
+
+    .menu-icon {
+        display: block;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 8px;
+        margin: 0;
+    }
+
+    .main .nav img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 8px;
+    }
+}
+
+@media (max-width: 480px) {
+    .main-bottom input {
+        width: 100%;
+        min-width: 0;
+    }
+
+    .search-box div { 
+        gap: 8px;
+    }
+
+    .search-box img {
+        width: 20px;
+    }
+
+    .bottom-info {
+        font-size: 11px;
+    }
+}
+
+.menu-icon {
+    width: 40px;
+    height: 40px;
+    border-radius: 50%;
+    cursor: pointer;
+    display: none;
+    padding: 8px;
+    background-color: #f0f4f9;
+}
+
+.menu-icon:hover {
+    background-color: #dfe4ea;
+    transform: scale(1.05);
+    transition: all 0.3s ease;
+}
+
+@media (max-width: 768px) {
+    .menu-icon {
+        display: block;
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 8px;
+        margin: 0;
+    }
+
+    .main .nav {
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        padding: 20px;
+        gap: 15px;
+    }
+
+    .main .nav img {
+        width: 40px;
+        height: 40px;
+        border-radius: 50%;
+        padding: 8px;
+    }
+}
+
+/* Update the result-data styles */
+.result-data {
+    display: flex;
+    align-items: flex-start;
+    gap: 20px;
+    padding: 20px 0;
+    line-height: 1.8;
+}
+
+.response-content {
+    flex: 1;
+    font-size: 16px;
+    color: #353740;
+    line-height: 1.8;
+}
+
+.response-content p {
+    margin: 12px 0;
+}
+
+.response-content strong {
+    font-weight: 600;
+    color: #1a1a1a;
+}
+
+.response-content pre {
+    background-color: #f7f7f8;
+    border-radius: 6px;
+    padding: 16px;
+    margin: 16px 0;
+    overflow-x: auto;
+}
+
+.response-content code {
+    font-family: 'Courier New', Courier, monospace;
+    font-size: 14px;
+}
+
+.response-content ul {
+    margin: 12px 0;
+    padding-left: 24px;
+}
+
+.response-content li {
+    margin: 8px 0;
+}
+
+/* Add spacing between messages */
+.result-data:not(:last-child) {
+    border-bottom: 1px solid #e5e5e5;
+    margin-bottom: 20px;
+}
+
+.message {
+    margin-bottom: 20px;
+}
+
+.user-message {
+    display: flex;
+    justify-content: flex-end;
+    margin: 20px 0;
+}
+
+.user-content {
+    color: #353740;
+    padding: 12px 16px;
+    border-radius: 12px;
+    max-width: 80%;
+    margin-left: auto;
+    background-color: transparent;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.user-content p {
+    margin: 0;
+    font-size: 16px;
+    line-height: 1.5;
+}
+
+.ai-message {
+    margin: 20px 0;
 }
