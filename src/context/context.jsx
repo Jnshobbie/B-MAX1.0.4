@@ -1,7 +1,7 @@
 import { createContext, useState } from "react";
 import runChat from "../config/Gemini";
 
-export const Context = createContext(); 
+export const Context = createContext();
 
 const ContextProvider = ({ children }) => {  
     const [input, setInput] = useState("");
@@ -14,17 +14,17 @@ const ContextProvider = ({ children }) => {
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
-        setInput(""); 
+        setInput("");
         setRecentPrompt("");
         setPrevPrompts([]);
         setChatHistory([]);
     }
 
     const onSent = async (prompt) => {
-        if (!prompt?.trim()) return;
+        if (!prompt?.trim()) return; 
         
         try {
-            setLoading(true);
+            setLoading(true); 
             setShowResult(true);
             setRecentPrompt(prompt);
             
@@ -41,20 +41,9 @@ const ContextProvider = ({ children }) => {
             
             const response = await runChat(prompt);
             
-            // Gradually display AI response
+            // Add AI response after receiving it
             if (response) {
-                const words = response.split(' ');
-                words.forEach((word, index) => {
-                    setTimeout(() => {
-                        setChatHistory(prev => {
-                            const lastMessage = prev[prev.length - 1];
-                            if (lastMessage && !lastMessage.isUser) {
-                                return [...prev.slice(0, -1), { text: lastMessage.text + ' ' + word, isUser: false }];
-                            }
-                            return [...prev, { text: word, isUser: false }];
-                        });
-                    }, 75 * index); // Adjust timing for gradual display
-                });
+                setChatHistory(prev => [...prev, { text: response, isUser: false }]);
             }
             
         } catch (error) {
