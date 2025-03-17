@@ -14,7 +14,7 @@ const ContextProvider = ({ children }) => {
     const newChat = () => {
         setLoading(false);
         setShowResult(false);
-        setInput("");
+        setInput(""); 
         setRecentPrompt("");
         setPrevPrompts([]);
         setChatHistory([]);

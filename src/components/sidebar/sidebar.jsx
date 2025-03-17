@@ -4,24 +4,24 @@ import { assets } from '../../assets/assets'
 import { Context } from '../../context/context' 
 
 const Sidebar = ({ isOpen, setIsOpen }) => {
-    const {onSent, prevPrompts, setRecentPrompt, newChat} = useContext(Context)
+    const { onSent, prevPrompts, setRecentPrompt, newChat } = useContext(Context)
 
     const handleNewChat = () => {
         newChat();
-        setIsOpen(false);
+        setIsOpen(false);  // Close sidebar on mobile
     }
 
     const loadPrompt = async (prompt) => {
         setRecentPrompt(prompt);
         await onSent(prompt);
-        setIsOpen(false);
+        setIsOpen(false);  // Close sidebar on mobile
     }
 
     return (
         <div className={`sidebar ${isOpen ? 'open' : ''}`}>
             <div className="top">
                 <img 
-                    onClick={() => setIsOpen(!isOpen)}
+                    onClick={() => setIsOpen(!isOpen)} 
                     className='menu' 
                     src={assets.menu_icon} 
                     alt="Menu" 
