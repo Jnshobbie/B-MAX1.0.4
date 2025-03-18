@@ -20,7 +20,7 @@ const ContextProvider = ({ children }) => {
         setChatHistory([]);
     }
 
-    const onSent = async (prompt) => {
+    const onSent = async (prompt) => { 
         if (!prompt?.trim()) return; 
         
         try {
